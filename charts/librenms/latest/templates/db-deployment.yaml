@@ -39,30 +39,12 @@ spec:
         - mountPath: /var/lib/mysql
           name: db-claim0
         env:
-          # The MySQL image will configure a root password with the value of MYSQL_ROOT_PASSWORD...
-          - name: MYSQL_ROOT_PASSWORD
-            valueFrom:
-              # rather than embed sensitive details in this config
-              # we reference another Kubernetes object
-              # in this case, the Secret with the name: db-env
-              secretKeyRef:
-                name: db-env
-                # references the rootpw key-value pair from the db-env Secret
-                key: MYSQL_PASSWORD
-          # ... an initial non-root user with a username of the value of MYSQL_USER ...
-          - name: MYSQL_USER
-            valueFrom:
-              secretKeyRef:
-                name: db-env
-                key: MYSQL_USER
-          # ... and a password of the value of MYSQL_PASSWORD ...
+          - name: MYSQL_DATABASE
+            value: librenms
           - name: MYSQL_PASSWORD
-            valueFrom:
-              secretKeyRef:
-                name: db-env
-                key: MYSQL_PASSWORD
-          # ... and an initial database named sakila
-          # with the value of MYSQL_DATABASE (while granting MYSQL_USER superuser access.)
+            value: librenms
+          - name: MYSQL_USER
+            value: librenms
           - name: MYSQL_DATABASE
             value: db
         # https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-probes/
