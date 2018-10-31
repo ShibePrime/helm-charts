@@ -1,7 +1,7 @@
-name: Librenms
-description: A generated Helm Chart for librenms from https://github.com/librenms/docker/
-version: 0.0.2
+name: docker-compose
+description: A generated Helm Chart for docker-compose from Skippbox Kompose
+version: 0.0.1
 keywords:
-  - librenms
+  - docker-compose
 sources:
 home:
