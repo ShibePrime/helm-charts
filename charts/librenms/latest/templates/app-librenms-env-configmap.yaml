@@ -17,6 +17,18 @@ data:
   RRDCACHED_HOST: rrdcached
   RRDCACHED_PORT: "42217"
   UPLOAD_MAX_SIZE: 16M
+  DOMAINNAME: example.com
+  HOSTNAME: librenms
+  MYSQL_DATABASE: librenms
+  MYSQL_USER: librenms
+  MYSQL_PASSWORD: librenms
+  SMTP_SERVER: smtp.example.com
+  SMTP_USERNAME: smtp@example.com
+  SMTP_PASSWORD: 
+  TZ: UTC
+  PUID: 1000
+  PGID: 1000
+
 kind: ConfigMap
 metadata:
   creationTimestamp: null
