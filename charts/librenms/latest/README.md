@@ -1,2 +1,3 @@
-This chart was created by Kompose
-# helm-charts
+
+# Librenms
+Alpha Helm Chart for deploying Librenms 
