@@ -26,10 +26,22 @@ spec:
         - name: DB_HOST
           value: db
         - name: DB_NAME
+          valueFrom:
+            configMapKeyRef:
+              key: DB_NAME
+              name: syslog-ng-librenms-env
         - name: DB_PASSWORD
+          valueFrom:
+            configMapKeyRef:
+              key: DB_PASSWORD
+              name: syslog-ng-librenms-env
         - name: DB_TIMEOUT
           value: "30"
         - name: DB_USER
+          valueFrom:
+            configMapKeyRef:
+              key: DB_USER
+              name: syslog-ng-librenms-env
         - name: LIBRENMS_CRON_ALERTS_ENABLE
           valueFrom:
             configMapKeyRef:
