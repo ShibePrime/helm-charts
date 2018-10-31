@@ -39,6 +39,8 @@ spec:
         - mountPath: /var/lib/mysql
           name: db-claim0
         env:
+          - name: MYSQL_ROOT_PASSWORD
+            value: librenms
           - name: MYSQL_DATABASE
             value: librenms
           - name: MYSQL_PASSWORD
