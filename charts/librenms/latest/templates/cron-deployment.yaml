@@ -25,21 +25,13 @@ spec:
         - name: DB_HOST
           value: db
         - name: DB_NAME
-          valueFrom:
-            configMapKeyRef:
-              key: DB_NAME
-              name: cron-librenms-env
+          value: librenms
         - name: DB_PASSWORD
-          valueFrom:
-            configMapKeyRef:
-              key: DB_PASSWORD
-              name: cron-librenms-env
+          value: librenms
         - name: DB_TIMEOUT
           value: "30"
         - name: DB_USER
-            configMapKeyRef:
-              key: DB_USER
-              name: cron-librenms-env
+          value: librenms
         - name: LIBRENMS_CRON_ALERTS_ENABLE
           valueFrom:
             configMapKeyRef:
