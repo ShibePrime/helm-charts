@@ -25,7 +25,7 @@ spec:
       containers:
       - env:
         - name: DB_HOST
-          value: db
+          value: db.librenms.svc.cluster.local
         - name: DB_NAME
           valueFrom:
             configMapKeyRef:

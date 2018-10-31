@@ -10,11 +10,11 @@ data:
   LIBRENMS_POLLER_INTERVAL: "5"
   LIBRENMS_POLLER_THREADS: "16"
   LIBRENMS_SNMP_COMMUNITY: librenmsdocker
-  MEMCACHED_HOST: memcached
+  MEMCACHED_HOST: memcached.librenms.svc.cluster.local
   MEMCACHED_PORT: "11211"
   MEMORY_LIMIT: 256M
   OPCACHE_MEM_SIZE: "128"
-  RRDCACHED_HOST: rrdcached
+  RRDCACHED_HOST: rrdcached.librenms.svc.cluster.local
   RRDCACHED_PORT: "42217"
   UPLOAD_MAX_SIZE: 16M
   DOMAINNAME: example.com
