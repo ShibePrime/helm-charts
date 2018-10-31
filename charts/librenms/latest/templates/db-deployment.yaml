@@ -1,22 +1,30 @@
+
+# deploy the MySQL server container
+
 apiVersion: extensions/v1beta1
+# https://kubernetes.io/docs/concepts/workloads/controllers/deployment/
 kind: Deployment
 metadata:
-  annotations:
-    kompose.cmd: kompose convert -c
-    kompose.version: 1.16.0 (0c01309)
-  creationTimestamp: null
-  labels:
-    io.kompose.service: db
   name: db
 spec:
+  # number of MySQL pods (replicas) to run
   replicas: 1
-  strategy:
-    type: Recreate
+  # The number of old deployments you want to keep around
+  revisionHistoryLimit: 5
+  # make replicas of kubernetes objects with the label app: mysql
+  selector:
+    matchLabels:
+      app: db
+  # the pod template describes what type of pod to create
+  # when the defined number of replicas are not up
+  # in this case, the pod that will be created is the one labeled app: mysql
   template:
     metadata:
-      creationTimestamp: null
       labels:
-        io.kompose.service: db
+        # this label is referenced by the selector for the Deployment, which creates pods
+        # and by the selector for the Service, which exposes the pod to the cluster
+        app: db
+    # details of what container(s) will actually be run in this pod
     spec:
       containers:
       - args:
@@ -24,38 +32,78 @@ spec:
         - --sql-mode=
         - --innodb-file-per-table=1
         - --lower-case-table-names=0
-        env:
-        - name: MYSQL_ALLOW_EMPTY_PASSWORD
-          value: "yes"
-        - name: MYSQL_DATABASE
-          valueFrom:
-            configMapKeyRef:
-              key: MYSQL_DATABASE
-              name: db-env
-        - name: MYSQL_PASSWORD
-          valueFrom:
-            configMapKeyRef:
-              key: MYSQL_PASSWORD
-              name: db-env
-        - name: MYSQL_USER
-          valueFrom:
-            configMapKeyRef:
-              key: MYSQL_USER
-              name: db-env
-        - name: TZ
-          valueFrom:
-            configMapKeyRef:
-              key: TZ
-              name: db-env
         image: mariadb:10.2
         name: db
         resources: {}
         volumeMounts:
         - mountPath: /var/lib/mysql
           name: db-claim0
-      restartPolicy: Always
+        env:
+          # The MySQL image will configure a root password with the value of MYSQL_ROOT_PASSWORD...
+          - name: MYSQL_ROOT_PASSWORD
+            valueFrom:
+              # rather than embed sensitive details in this config
+              # we reference another Kubernetes object
+              # in this case, the Secret with the name: db-env
+              secretKeyRef:
+                name: db-env
+                # references the rootpw key-value pair from the db-env Secret
+                key: MYSQL_PASSWORD
+          # ... an initial non-root user with a username of the value of MYSQL_USER ...
+          - name: MYSQL_USER
+            valueFrom:
+              secretKeyRef:
+                name: db-env
+                key: MYSQL_USER
+          # ... and a password of the value of MYSQL_PASSWORD ...
+          - name: MYSQL_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: db-env
+                key: MYSQL_PASSWORD
+          # ... and an initial database named sakila
+          # with the value of MYSQL_DATABASE (while granting MYSQL_USER superuser access.)
+          - name: MYSQL_DATABASE
+            value: db
+        # https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-probes/
+        livenessProbe:
+          tcpSocket:
+            port: 3306
+        # https://kubernetes.io/docs/concepts/services-networking/connect-applications-service/#exposing-pods-to-the-cluster
+        ports:
+        # make our mysql pod available within the cluster on port 3306
+        - containerPort: 3306
+        # attach our persistent disk
+
+      # our spec requires a volume
       volumes:
+      # the name assigned here is referenced by the container in volumeMounts: name
       - name: db-claim0
         persistentVolumeClaim:
+          # refers to the PersistentVolumeClaim named database
+          # this expects a PersistentVolumeClaim volume to exist already
+          # with correct permissions for this cluster
           claimName: db-claim0
-status: {}
+
+---
+# expose a pod on mysql.default.svc.cluster.local to the rest of the cluster
+
+apiVersion: v1
+# https://kubernetes.io/docs/concepts/services-networking/service/
+kind: Service
+metadata:
+  # the name mysql here means you can reference the pod
+  # using the host mysql.default.svc.cluster.local from within the cluster
+  name: db
+spec:
+  # allows us to set our own internal IP to reference this pod
+  # in this case we care about the port
+  # https://kubernetes.io/docs/concepts/services-networking/service/#choosing-your-own-ip-address
+  type: ClusterIP
+  ports:
+  # make the service available on this port within the cluster
+  - port: 3306
+    protocol: TCP
+  # apply this service to the pod with the label app: mysql
+  selector:
+    app: db
