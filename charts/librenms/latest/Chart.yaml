@@ -1,6 +1,6 @@
 name: Librenms
 description: A generated Helm Chart for librenms from librenms/docker
-version: 0.0.1
+version: 0.0.2
 keywords:
   - librenms
 sources:
