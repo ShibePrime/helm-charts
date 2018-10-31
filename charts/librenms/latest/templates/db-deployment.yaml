@@ -78,7 +78,7 @@ kind: Service
 metadata:
   # the name mysql here means you can reference the pod
   # using the host mysql.default.svc.cluster.local from within the cluster
-  name: db
+  name: db.librenms.svc.cluster.local
 spec:
   # allows us to set our own internal IP to reference this pod
   # in this case we care about the port
