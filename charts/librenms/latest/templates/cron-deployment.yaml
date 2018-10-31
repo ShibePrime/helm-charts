@@ -23,7 +23,7 @@ spec:
         - /usr/local/bin/cron
         env:
         - name: DB_HOST
-          value: db.librenms.svc.cluster.local
+          value: db
         - name: DB_NAME
           value: librenms
         - name: DB_PASSWORD
