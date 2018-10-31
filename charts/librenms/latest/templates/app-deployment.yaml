@@ -27,10 +27,22 @@ spec:
         - name: DB_HOST
           value: db
         - name: DB_NAME
+          valueFrom:
+            configMapKeyRef:
+              key: MYSQL_NAME
+              name: app-librenms-env
         - name: DB_PASSWORD
+          valueFrom:
+            configMapKeyRef:
+              key: MYSQL_PASSWORD
+              name: app-librenms-env
         - name: DB_TIMEOUT
           value: "30"
         - name: DB_USER
+          valueFrom:
+            configMapKeyRef:
+              key: MYSQL_USER
+              name: app-librenms-env
         - name: LIBRENMS_CRON_ALERTS_ENABLE
           valueFrom:
             configMapKeyRef:
