@@ -1,3 +1,2 @@
-
-# Librenms
-Alpha Helm Chart for deploying Librenms 
+This chart was created by Kompose
+# helm-charts
