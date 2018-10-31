@@ -29,7 +29,7 @@ spec:
         - name: DB_NAME
           valueFrom:
             configMapKeyRef:
-              key: MYSQL_NAME
+              key: MYSQL_DATABASE
               name: app-librenms-env
         - name: DB_PASSWORD
           valueFrom:
