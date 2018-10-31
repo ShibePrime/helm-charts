@@ -43,6 +43,10 @@ spec:
               key: MYSQL_USER
               name: db-env
         - name: TZ
+          valueFrom:
+            configMapKeyRef:
+              key: TZ
+              name: db-env
         image: mariadb:10.2
         name: db
         resources: {}
