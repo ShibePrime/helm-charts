@@ -1,0 +1,52 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  annotations:
+    kompose.cmd: kompose convert -c
+    kompose.version: 1.16.0 (0c01309)
+  creationTimestamp: null
+  labels:
+    io.kompose.service: rrdcached
+  name: rrdcached
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        io.kompose.service: rrdcached
+    spec:
+      containers:
+      - env:
+        - name: FLUSH_DEAD_DATA_INTERVAL
+          value: "3600"
+        - name: LOG_LEVEL
+          value: LOG_INFO
+        - name: PGID
+        - name: PUID
+        - name: TZ
+        - name: WRITE_JITTER
+          value: "1800"
+        - name: WRITE_THREADS
+          value: "4"
+        - name: WRITE_TIMEOUT
+          value: "1800"
+        image: crazymax/rrdcached
+        name: rrdcached
+        resources: {}
+        volumeMounts:
+        - mountPath: /data/db
+          name: rrdcached-claim0
+        - mountPath: /data/journal
+          name: rrdcached-claim1
+      restartPolicy: Always
+      volumes:
+      - name: rrdcached-claim0
+        persistentVolumeClaim:
+          claimName: rrdcached-claim0
+      - name: rrdcached-claim1
+        persistentVolumeClaim:
+          claimName: rrdcached-claim1
+status: {}

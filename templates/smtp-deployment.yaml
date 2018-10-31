@@ -1,0 +1,41 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  annotations:
+    kompose.cmd: kompose convert -c
+    kompose.version: 1.16.0 (0c01309)
+  creationTimestamp: null
+  labels:
+    io.kompose.service: smtp
+  name: smtp
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        io.kompose.service: smtp
+    spec:
+      containers:
+      - env:
+        - name: SERVER_HOSTNAME
+          value: .
+        - name: SMTP_PASSWORD
+        - name: SMTP_SERVER
+        - name: SMTP_USERNAME
+        image: juanluisbaptiste/postfix
+        name: smtp
+        resources: {}
+        volumeMounts:
+        - mountPath: /etc/localtime
+          name: smtp-claim0
+          readOnly: true
+      restartPolicy: Always
+      volumes:
+      - name: smtp-claim0
+        persistentVolumeClaim:
+          claimName: smtp-claim0
+          readOnly: true
+status: {}

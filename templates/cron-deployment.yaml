@@ -1,0 +1,131 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  annotations:
+    kompose.cmd: kompose convert -c
+    kompose.version: 1.16.0 (0c01309)
+  creationTimestamp: null
+  labels:
+    io.kompose.service: cron
+  name: cron
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        io.kompose.service: cron
+    spec:
+      containers:
+      - args:
+        - /usr/local/bin/cron
+        env:
+        - name: DB_HOST
+          value: db
+        - name: DB_NAME
+        - name: DB_PASSWORD
+        - name: DB_TIMEOUT
+          value: "30"
+        - name: DB_USER
+        - name: LIBRENMS_CRON_ALERTS_ENABLE
+          valueFrom:
+            configMapKeyRef:
+              key: LIBRENMS_CRON_ALERTS_ENABLE
+              name: cron-librenms-env
+        - name: LIBRENMS_CRON_BILLING_CALCULATE_ENABLE
+          valueFrom:
+            configMapKeyRef:
+              key: LIBRENMS_CRON_BILLING_CALCULATE_ENABLE
+              name: cron-librenms-env
+        - name: LIBRENMS_CRON_BILLING_ENABLE
+          valueFrom:
+            configMapKeyRef:
+              key: LIBRENMS_CRON_BILLING_ENABLE
+              name: cron-librenms-env
+        - name: LIBRENMS_CRON_CHECK_SERVICES_ENABLE
+          valueFrom:
+            configMapKeyRef:
+              key: LIBRENMS_CRON_CHECK_SERVICES_ENABLE
+              name: cron-librenms-env
+        - name: LIBRENMS_CRON_DAILY_ENABLE
+          valueFrom:
+            configMapKeyRef:
+              key: LIBRENMS_CRON_DAILY_ENABLE
+              name: cron-librenms-env
+        - name: LIBRENMS_CRON_DISCOVERY_ENABLE
+          valueFrom:
+            configMapKeyRef:
+              key: LIBRENMS_CRON_DISCOVERY_ENABLE
+              name: cron-librenms-env
+        - name: LIBRENMS_CRON_POLLER_ENABLE
+          valueFrom:
+            configMapKeyRef:
+              key: LIBRENMS_CRON_POLLER_ENABLE
+              name: cron-librenms-env
+        - name: LIBRENMS_POLLER_INTERVAL
+          valueFrom:
+            configMapKeyRef:
+              key: LIBRENMS_POLLER_INTERVAL
+              name: cron-librenms-env
+        - name: LIBRENMS_POLLER_THREADS
+          valueFrom:
+            configMapKeyRef:
+              key: LIBRENMS_POLLER_THREADS
+              name: cron-librenms-env
+        - name: LIBRENMS_SNMP_COMMUNITY
+          valueFrom:
+            configMapKeyRef:
+              key: LIBRENMS_SNMP_COMMUNITY
+              name: cron-librenms-env
+        - name: MEMCACHED_HOST
+          valueFrom:
+            configMapKeyRef:
+              key: MEMCACHED_HOST
+              name: cron-librenms-env
+        - name: MEMCACHED_PORT
+          valueFrom:
+            configMapKeyRef:
+              key: MEMCACHED_PORT
+              name: cron-librenms-env
+        - name: MEMORY_LIMIT
+          valueFrom:
+            configMapKeyRef:
+              key: MEMORY_LIMIT
+              name: cron-librenms-env
+        - name: OPCACHE_MEM_SIZE
+          valueFrom:
+            configMapKeyRef:
+              key: OPCACHE_MEM_SIZE
+              name: cron-librenms-env
+        - name: PGID
+        - name: PUID
+        - name: RRDCACHED_HOST
+          valueFrom:
+            configMapKeyRef:
+              key: RRDCACHED_HOST
+              name: cron-librenms-env
+        - name: RRDCACHED_PORT
+          valueFrom:
+            configMapKeyRef:
+              key: RRDCACHED_PORT
+              name: cron-librenms-env
+        - name: TZ
+        - name: UPLOAD_MAX_SIZE
+          valueFrom:
+            configMapKeyRef:
+              key: UPLOAD_MAX_SIZE
+              name: cron-librenms-env
+        image: librenms/librenms:latest
+        name: cron
+        resources: {}
+        volumeMounts:
+        - mountPath: /data
+          name: cron-claim0
+      restartPolicy: Always
+      volumes:
+      - name: cron-claim0
+        persistentVolumeClaim:
+          claimName: cron-claim0
+status: {}
